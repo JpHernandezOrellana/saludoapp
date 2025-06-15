@@ -2,17 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_3.8.7'
-        jdk 'JDK_21'
+        maven 'maven3.8'
+        jdk 'jdk21'
     }
 
     stages {
-        stage('Clonar Repo') {
-            steps {
-                git 'https://github.com/JpHernandezOrellana/saludoapp.git'
-            }
-        }
-
         stage('Compilar') {
             steps {
                 sh 'mvn clean compile'
@@ -24,14 +18,11 @@ pipeline {
                 sh 'mvn test'
             }
         }
-    }
 
-    post {
-        success {
-            echo '¡Compilación y pruebas completadas con éxito!'
-        }
-        failure {
-            echo 'La compilación o pruebas fallaron.'
+        stage('Empaquetar') {
+            steps {
+                sh 'mvn package'
+            }
         }
     }
 }
